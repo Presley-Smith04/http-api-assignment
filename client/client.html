@@ -1,32 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <title>Our simple HTTP server</title>
-  <link rel="stylesheet" type="text/css" href="/style.css">
-  
-  <script>
 
-  </script>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP API Test</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-  <section id="top">
-    <h3>Status Code Tests</h3>
-    <select id="page">
-      <option value="/success">Success</option>
-      <option value="/badRequest">Bad Request</option>
-      <option value="/unauthorized">Unauthorized</option>
-      <option value="/forbidden">Forbidden</option>
-      <option value="/internal">Internal</option>
-      <option value="/notImplemented">Not Implemented</option>
-      <option value="/notFound">Not Found</option>
-    </select>
-    <select id="type">
-      <option value="application/json">JSON</option>
-      <option value="text/xml">XML</option>
-    </select>
-    <button id="send">Send</button>
-  </section>
-  <section id="content">
-  </section>
+  <h1>RICH MEDIA WEB APP DEV II - HTTP API HW</h1>
+
+  <label for="endpoint">Choose an endpoint:</label>
+  <select id="endpoint">
+    <option value="/badRequest">Bad Request</option>
+    <option value="/unauthorized">Unauthorized</option>
+    <option value="/forbidden">Forbidden</option>
+    <option value="/internal">Internal Error</option>
+    <option value="/notImplemented">Not Implemented</option>
+    <option value="/notFound">Not Found (404)</option>
+  </select>
+
+  <label for="responseType">Response Type:</label>
+  <select id="responseType">
+    <option value="application/json">JSON</option>
+    <option value="application/xml">XML</option>
+  </select>
+
+  <button id="sendRequest">Send</button>
+
+  <h2>Response:</h2>
+  <pre id="responseOutput"></pre>
+
+  <script>
+    document.getElementById("sendRequest").addEventListener("click", async () => {
+      const endpoint = document.getElementById("endpoint").value;
+      const responseType = document.getElementById("responseType").value;
+      const output = document.getElementById("responseOutput");
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "GET",
+          headers: {
+            "Accept": responseType
+          }
+        });
+
+        //log responses
+        const rawText = await response.text();
+        console.log("Raw Response:", rawText);
+
+        if (responseType === "application/json") {
+          output.textContent = JSON.stringify(JSON.parse(rawText), null, 2);
+        } else {
+          //xml to string
+          output.textContent = rawText; 
+        }
+      } catch (error) {
+        output.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
 </body>
+
 </html>
