@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT =process.env.PORT || process.env.NODE_PORT || 3000; 
 
 //function to format responses as JSON or XML
 const getResponse = (status, message, id = null, accept) => {
